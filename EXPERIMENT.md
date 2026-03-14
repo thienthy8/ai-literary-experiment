@@ -252,6 +252,43 @@ Not summaries. Provocations.
 
 ---
 
+### Payment Flow (Stripe Checkout)
+
+**Trigger:** When a reader clicks "Buy Book + Source Files" (single, $5) or "Get All Three" (bundle, $10), a Stripe Checkout session opens.
+
+**Stripe Checkout configuration:**
+- **Line item name:** "AI Literary Experiment" (for single: append book title, e.g., "AI Literary Experiment — Meet AI: First Words")
+- **Prices:** $5 per single book, $10 for the bundle (all three)
+- **Payment methods:** All Stripe-supported (card, Apple Pay, Google Pay, etc.)
+- **Billing country:** Collected automatically by Stripe. This is the ONLY data point used for all live features (Global Pulse map, Morning Coffee Relay, Whisper Wall, Confidence Shift). No additional location tracking.
+- **Receipt:** Stripe sends an automatic email receipt. Line item displays as "AI Literary Experiment."
+- **No accounts required.** No login. No registration. One-time payment only.
+
+### Post-Purchase Delivery
+
+After successful payment, the reader is redirected to a **confirmation/delivery page** that includes:
+
+1. **Book access links** (based on what was purchased):
+   - Meet AI: First Words → https://meet-ai-first-words.lovable.app/
+   - Own AI → https://own-ai.lovable.app/
+   - Leverage AI → https://leverage-ai.lovable.app/
+   - Bundle buyers receive all three links.
+
+2. **Markdown source file downloads** (based on what was purchased):
+   - Meet AI → `book1-meet-ai-concept-final.md`
+   - Own AI → `book2-ai-and-you-concept-final.md`
+   - Leverage AI → `book3-still-you-concept-final.md`
+   - Bundle buyers receive all three files.
+   - Files are hosted in the repo under `source-files/` and served as direct downloads.
+
+3. **Whisper Wall prompt** — "After reading, I gave myself permission to ___." (gated by Stripe session ID)
+
+4. **Confidence Shift poll** — Before/After feeling selector (gated by Stripe session ID)
+
+**Delivery email (optional future enhancement):** Send a follow-up email via Stripe with the book links and download links, in case the reader closes the confirmation page.
+
+---
+
 ### Interactive World Map (Global Pulse)
 - **Type:** Choropleth world map (Mapbox, Leaflet, or react-simple-maps)
 - **Data source:** Supabase table `purchases` with columns: `{country_code, timestamp, book_id}`
