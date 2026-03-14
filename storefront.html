@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An AI Literary Experiment — T Ngo</title>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #00B0FF;
+    --accent-light: rgba(0, 176, 255, 0.08);
+    --accent-glow: rgba(0, 176, 255, 0.25);
+    --warm-white: #FAFAF7;
+    --warm-alt: #F5F4F0;
+    --text-primary: #1A1A1A;
+    --text-secondary: #4A4A4A;
+    --text-muted: #7A7A7A;
+    --border: #E8E6E1;
+    --card-bg: #FFFFFF;
+    --coffee: #8B6914;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Sans 3', 'Calibri', 'Arial', sans-serif;
+    background: var(--warm-white);
+    color: var(--text-primary);
+    line-height: 1.7;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Marcellus SC', 'Georgia', 'Times New Roman', serif;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 80px 24px 64px;
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--warm-white) 100%);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+
+  .header-tagline {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 540px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+
+  .header-tagline strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* Live pulse in header */
+  .header-pulse {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    animation: header-pulse-fade 4s ease-in-out infinite;
+    min-height: 44px;
+  }
+
+  .header-pulse .dot {
+    width: 8px;
+    height: 8px;
+    background: #22C55E;
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes header-pulse-fade {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    margin-bottom: 24px;
+    color: var(--text-primary);
+  }
+
+  .section-text {
+    max-width: 680px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .section-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* ── MANIFESTO ── */
+  .manifesto {
+    text-align: center;
+    background: var(--warm-alt);
+    max-width: 100%;
+    padding: 80px 24px;
+  }
+
+  .manifesto .inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .manifesto p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+
+  .manifesto p:last-child { margin-bottom: 0; }
+
+  .manifesto .lead {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 400;
+    margin-bottom: 28px;
+  }
+
+  /* ── PILLARS ── */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 40px;
+  }
+
+  .pillar {
+    padding: 32px 24px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .pillar-number {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .pillar h3 { font-size: 1.15rem; margin-bottom: 12px; }
+
+  .pillar p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ── BOOK CARDS ── */
+  .books-intro {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    margin-top: 48px;
+    margin-bottom: 36px;
+  }
+
+  .book-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 24px 28px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .book-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .book-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 8px 32px rgba(0,176,255,0.1);
+    transform: translateY(-4px);
+  }
+
+  .book-card:hover::before { opacity: 1; }
+
+  .book-number {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .book-cover {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 4px 4px 16px rgba(0,0,0,0.08);
+    position: relative;
+  }
+
+  .book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .book-cover-version {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #FFFFFF;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    border-radius: 3px;
+    padding: 2px 6px;
+    line-height: 1.3;
+    text-align: right;
+  }
+
+  .book-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+
+  .book-version-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    padding: 3px 10px;
+    background: var(--warm-alt);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .book-version-badge .ver { font-weight: 700; color: var(--accent); }
+
+  .book-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    min-height: 66px;
+  }
+
+  .book-price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+  }
+
+  .book-price .amount { font-weight: 700; font-size: 1.3rem; }
+
+  .btn-buy-single {
+    display: inline-block;
+    width: 100%;
+    padding: 11px 20px;
+    background: var(--card-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .btn-buy-single:hover {
+    background: var(--accent-light);
+  }
+
+  /* ── BUNDLE (primary CTA) ── */
+  .bundle-card {
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: 32px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* bundle ribbon removed */
+
+  .bundle-info h3 { font-size: 1.3rem; margin-bottom: 4px; }
+  .bundle-info p { color: var(--text-muted); font-size: 1rem; }
+
+  .bundle-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .bundle-price-block { text-align: right; }
+
+  .bundle-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .bundle-price-sub {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .btn-buy {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--accent);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .btn-buy:hover {
+    background: #009AE0;
+    box-shadow: 0 4px 16px rgba(0,176,255,0.3);
+  }
+
+  .or-singles {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    margin-top: -4px;
+  }
+
+  /* ── GLOBAL PULSE MAP ── */
+  .map-section {
+    text-align: center;
+    background: var(--warm-alt);
+    max-width: 100%;
+    padding: 80px 24px;
+  }
+
+  .map-section .inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .map-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 32px 32px;
+    margin-top: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 32px;
+  }
+
+  .map-stat { text-align: center; }
+
+  .map-stat-number {
+    font-family: 'Marcellus SC', serif;
+    font-size: 2.8rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .map-stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+
+  /* 100 Countries Goal */
+  .goal-container {
+    max-width: 480px;
+    margin: 0 auto 32px;
+  }
+
+  .goal-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .goal-label strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .goal-bar-track {
+    width: 100%;
+    height: 10px;
+    background: #E8E6E1;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .goal-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #66D4FF);
+    border-radius: 10px;
+    transition: width 1.5s ease;
+    position: relative;
+  }
+
+  .goal-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+    border-radius: 0 10px 10px 0;
+    animation: goal-shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes goal-shimmer {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  /* Map placeholder for Lovable */
+  .map-placeholder {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    background: var(--warm-alt);
+    color: var(--text-muted);
+  }
+
+  .map-placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+
+  .map-placeholder h4 {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .map-placeholder p {
+    font-size: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .map-placeholder .specs {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+  }
+
+  .map-footnote {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* ── MORNING COFFEE RELAY ── */
+  .relay-container {
+    margin-top: 32px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .relay-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--warm-white);
+  }
+
+  .relay-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .relay-header h4 {
+    font-family: 'Marcellus SC', serif;
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+
+  .relay-live-dot {
+    width: 8px; height: 8px;
+    background: #22C55E;
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  .relay-live-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #22C55E;
+  }
+
+  .relay-feed {
+    padding: 0;
+    max-height: 260px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .relay-feed::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 48px;
+    background: linear-gradient(transparent, var(--card-bg));
+    pointer-events: none;
+  }
+
+  .relay-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba(232,230,225,0.5);
+    animation: relay-fade-in 0.6s ease-out;
+    transition: background 0.3s ease;
+  }
+
+  .relay-item:hover { background: var(--accent-light); }
+
+  @keyframes relay-fade-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .relay-flag {
+    font-size: 1.4rem;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 28px;
+    text-align: center;
+  }
+
+  .relay-message {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .relay-message strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .relay-time {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* ── WHISPER WALL ── */
+  .whisper-section {
+    text-align: center;
+    background: #1A1A1A;
+    max-width: 100%;
+    padding: 80px 24px;
+    color: #FAFAF7;
+  }
+
+  .whisper-section .inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .whisper-section .section-label { color: var(--accent); }
+  .whisper-section .section-title { color: #FAFAF7; }
+
+  .whisper-intro {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    font-size: 1rem;
+    color: #A0A0A0;
+    line-height: 1.7;
+  }
+
+  .whisper-wall {
+    columns: 3;
+    column-gap: 20px;
+  }
+
+  .whisper-card {
+    break-inside: avoid;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 24px 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .whisper-card:hover {
+    background: rgba(0,176,255,0.08);
+    border-color: rgba(0,176,255,0.2);
+    transform: translateY(-2px);
+  }
+
+  .whisper-card::before {
+    content: '\201C';
+    font-family: 'Marcellus SC', serif;
+    font-size: 2.5rem;
+    color: var(--accent);
+    opacity: 0.4;
+    position: absolute;
+    top: 8px; left: 14px;
+    line-height: 1;
+  }
+
+  .whisper-text {
+    font-size: 1rem;
+    color: #D4D4D4;
+    line-height: 1.7;
+    margin-bottom: 14px;
+    padding-top: 12px;
+    font-style: italic;
+  }
+
+  .whisper-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .whisper-origin {
+    font-size: 0.85rem;
+    color: #7A7A7A;
+  }
+
+  .whisper-origin .flag {
+    font-size: 1rem;
+    margin-right: 4px;
+  }
+
+  .whisper-book-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    background: rgba(0,176,255,0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .whisper-cta { margin-top: 48px; }
+
+  .whisper-submit-hint {
+    max-width: 440px;
+    margin: 0 auto 20px;
+    font-size: 1rem;
+    color: #A0A0A0;
+  }
+
+  .btn-whisper {
+    display: inline-block;
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .btn-whisper:hover {
+    background: rgba(0,176,255,0.1);
+    box-shadow: 0 0 24px rgba(0,176,255,0.15);
+  }
+
+  .whisper-count {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: #7A7A7A;
+  }
+
+  .whisper-count span { color: var(--accent); font-weight: 600; }
+
+  /* ── CONFIDENCE SHIFT ── */
+  .confidence-section {
+    text-align: center;
+    max-width: 100%;
+    padding: 80px 24px;
+    background: var(--warm-white);
+  }
+
+  .confidence-section .inner {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .confidence-intro {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.7;
+  }
+
+  .confidence-poll {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .confidence-column {
+    flex: 1;
+    min-width: 260px;
+    max-width: 320px;
+  }
+
+  .confidence-label {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .confidence-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .confidence-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .confidence-btn:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 12px rgba(0,176,255,0.1);
+  }
+
+  .confidence-btn.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .confidence-btn-text {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    z-index: 1;
+  }
+
+  .confidence-btn-pct {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    z-index: 1;
+  }
+
+  .confidence-bar {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: var(--accent-light);
+    border-radius: 10px 0 0 10px;
+    transition: width 0.8s ease;
+  }
+
+  .confidence-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 24px;
+  }
+
+  .confidence-arrow {
+    font-size: 2rem;
+    color: var(--accent);
+  }
+
+  .confidence-total {
+    margin-top: 28px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .confidence-total span { color: var(--accent); font-weight: 600; }
+
+  /* ── APPRENTICE CHANGELOG ── */
+  .changelog-section {
+    background: var(--warm-alt);
+    max-width: 100%;
+    padding: 80px 24px;
+  }
+
+  .changelog-section .inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .changelog-intro {
+    max-width: 680px;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 36px;
+    line-height: 1.8;
+  }
+
+  .changelog-timeline {
+    position: relative;
+    padding-left: 32px;
+    border-left: 2px solid var(--accent);
+    max-width: 700px;
+  }
+
+  .changelog-entry {
+    position: relative;
+    padding-bottom: 36px;
+  }
+
+  .changelog-entry:last-child { padding-bottom: 0; }
+
+  .changelog-entry::before {
+    content: '';
+    position: absolute;
+    left: -39px;
+    top: 4px;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 3px solid var(--warm-alt);
+  }
+
+  .changelog-year {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+  }
+
+  .changelog-entry h4 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+
+  .changelog-entry p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .changelog-future {
+    opacity: 0.5;
+    border-left: 2px dashed var(--border);
+    padding-left: 6px;
+    margin-left: -8px;
+  }
+
+  .changelog-future::before {
+    background: var(--border);
+  }
+
+  /* ── AUTHOR ── */
+  .author-section {
+    text-align: center;
+    padding: 80px 24px;
+    background: var(--warm-white);
+  }
+
+  .author-section .inner {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .author-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 24px;
+    border: 3px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  .author-greeting {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .author-role {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 6px;
+  }
+
+  .author-role strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* ── RULES ── */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .rule-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    text-align: center;
+  }
+
+  .rule-icon {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .rule-card h4 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+
+  .rule-card p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── STICKY BUY BAR ── */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 12px 24px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  }
+
+  .sticky-bar.visible {
+    transform: translateY(0);
+  }
+
+  .sticky-bar-books {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .sticky-bar-books a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .sticky-bar-books a:hover { color: var(--accent); }
+
+  .sticky-bar-sep {
+    color: var(--border);
+    font-size: 0.85rem;
+  }
+
+  .sticky-bar .btn-buy {
+    padding: 10px 24px;
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 60px 24px 80px;
+    border-top: 1px solid var(--border);
+    background: #FFFFFF;
+  }
+
+  .footer-brand {
+    font-family: 'Marcellus SC', serif;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .footer-sign-off {
+    font-size: 1rem;
+    color: var(--text-secondary);
+  }
+
+  .footer-links {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .books-grid { grid-template-columns: 1fr; gap: 20px; }
+    .pillars-grid { grid-template-columns: 1fr; gap: 20px; }
+    .rules-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .bundle-card {
+      flex-direction: column;
+      text-align: center;
+    }
+    .bundle-card::before { display: none; }
+    .map-stats { gap: 24px; }
+    .map-stat-number { font-size: 2.2rem; }
+    .whisper-wall { columns: 1; }
+    .sticky-bar-books { display: none; }
+    .sticky-bar { justify-content: center; }
+    .confidence-poll { gap: 20px; }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .whisper-wall { columns: 2; }
+  }
+
+  @media (max-width: 480px) {
+    .rules-grid { grid-template-columns: 1fr; }
+    .header { padding: 60px 20px 48px; }
+    section { padding: 60px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header class="header">
+  <h1>Prompt Alone Does Not Create Outcome</h1>
+  <p class="header-tagline">
+    Three books. 1 experiment. Human-led, AI-assisted. Priced at a cup of coffee.<br>
+    <strong>100% donated.</strong> Welcome to the experiment.
+  </p>
+  <div class="header-pulse" id="header-pulse">
+    <span class="dot"></span>
+    <span id="header-pulse-text">Someone in Tokyo just joined the experiment</span>
+  </div>
+</header>
+
+<!-- ════════ MANIFESTO ════════ -->
+<section class="manifesto">
+  <div class="inner">
+    <div class="section-label">The Experiment</div>
+    <p class="lead">
+      We are living through a shift in how words are born. This isn't about replacing the human author — it's about exploring the middle ground where human intent meets machine intelligence to create something neither could produce alone.
+    </p>
+    <p>
+      Every word in these three books was shaped by a human who chose what to keep, what to cut, and what to rewrite. AI assisted. A human led. That's not a disclaimer — it's the entire point. And when the next model arrives, we'll do it again — same intent, new apprentice — so you can watch the evolution unfold.
+    </p>
+    <p>
+      I believe high-level AI literacy should be as accessible, refreshing, and essential as your morning cup of coffee.
+    </p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════ THREE PILLARS ════════ -->
+<section>
+  <div class="section-label">Why This Works</div>
+  <h2 class="section-title">The Three Pillars</h2>
+
+  <div class="pillars-grid">
+    <div class="pillar">
+      <div class="pillar-number">Pillar 01</div>
+      <h3>The Coffee Standard</h3>
+      <p>A good book, like a good brew, should wake you up. By pegging the price to a daily ritual, we're testing a thesis: <strong>can we sustain a global library through micro-contributions?</strong> Your purchase isn't a transaction — it's fuel for the next chapter. 100% of revenue will be donated after 12 months.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-number">Pillar 02</div>
+      <h3>Radical Transparency</h3>
+      <p>Every book is a snapshot of a moment in time. Living documents. As models evolve, so does the experiment. Each edition is versioned — <strong>Book 1 (v2026. Assisted by Claude 4.6)</strong> — so you can see how the same human intent produces different results as the apprentice upgrades. You get the markdown source files — the "bones" of the book. The exact prompts and structure. Use them to see how it was made, then use them to create your own experiment. Let me know how it shaped out.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-number">Pillar 03</div>
+      <h3>The Global Pulse</h3>
+      <p>Intelligence has no borders. Our map tracks every "coffee" bought across the globe. <strong>Country-level only. No personal data. Ever.</strong> Just the fact that someone in a corner of the world decided to lean into the future today.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════ BOOKS: BUNDLE FIRST, THEN SINGLES ════════ -->
+<section id="books-section">
+  <div class="books-intro">
+    <div class="section-label">The Collection</div>
+    <h2 class="section-title">Three Books. One Cup of Coffee Each.</h2>
+  </div>
+
+  <!-- Bundle: primary CTA -->
+  <div class="bundle-card">
+    <div class="bundle-info">
+      <h3>The Complete Experiment</h3>
+      <p>All three books + all markdown source files. One purchase. The full journey.</p>
+    </div>
+    <div class="bundle-right">
+      <div class="bundle-price-block">
+        <div class="bundle-price">$10</div>
+        <div class="bundle-price-sub">&#9749;&#9749;&#9749; three coffees</div>
+      </div>
+      <a href="#" class="btn-buy">Get All Three</a>
+    </div>
+  </div>
+
+  <div class="or-singles">or pick one to start with</div>
+
+  <div class="books-grid">
+    <!-- Book 1 -->
+    <div class="book-card">
+      <div class="book-number">Book One</div>
+      <div class="book-cover">
+        <div class="book-cover-version">v2026 &middot; Claude 4.6</div>
+        <img src="Book cover_Book 1.jpg" alt="Meet AI: First Words cover">
+      </div>
+      <h3>Meet AI: First Words</h3>
+      <div class="book-version-badge"><span class="ver">v2026</span> <span>Assisted by Claude 4.6</span></div>
+      <p class="book-description">Five gentle ideas to understand about AI — told in the way you'd tell a bedtime story.</p>
+      <div class="book-price">
+        <span>&#9749;</span>
+        <span class="amount">$5</span>
+      </div>
+      <a href="#" class="btn-buy-single">Buy Book + Source Files</a>
+    </div>
+
+    <!-- Book 2 -->
+    <div class="book-card">
+      <div class="book-number">Book Two</div>
+      <div class="book-cover">
+        <div class="book-cover-version">v2026 &middot; Claude 4.6</div>
+        <img src="Book cover_Book 2.png" alt="Own AI cover">
+      </div>
+      <h3>Own AI</h3>
+      <div class="book-version-badge"><span class="ver">v2026</span> <span>Assisted by Claude 4.6</span></div>
+      <p class="book-description">Five things worth knowing — so AI works for you, not the other way around.</p>
+      <div class="book-price">
+        <span>&#9749;</span>
+        <span class="amount">$5</span>
+      </div>
+      <a href="#" class="btn-buy-single">Buy Book + Source Files</a>
+    </div>
+
+    <!-- Book 3 -->
+    <div class="book-card">
+      <div class="book-number">Book Three</div>
+      <div class="book-cover">
+        <div class="book-cover-version">v2026 &middot; Claude 4.6</div>
+        <img src="Book cover_Book 3.png" alt="Leverage AI cover">
+      </div>
+      <h3>Leverage AI</h3>
+      <div class="book-version-badge"><span class="ver">v2026</span> <span>Assisted by Claude 4.6</span></div>
+      <p class="book-description">Five quiet permissions — for the woman who never stopped being capable — and that AI might be the first step she's been waiting to take.</p>
+      <div class="book-price">
+        <span>&#9749;</span>
+        <span class="amount">$5</span>
+      </div>
+      <a href="#" class="btn-buy-single">Buy Book + Source Files</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ GLOBAL PULSE MAP ════════ -->
+<section class="map-section">
+  <div class="inner">
+    <div class="section-label">The Global Pulse</div>
+    <h2 class="section-title">Can This Experiment Reach 100 Countries?</h2>
+
+    <div class="map-container">
+      <div class="map-stats">
+        <div class="map-stat">
+          <div class="map-stat-number">423</div>
+          <div class="map-stat-label">Readers</div>
+        </div>
+        <div class="map-stat">
+          <div class="map-stat-number">27</div>
+          <div class="map-stat-label">Countries</div>
+        </div>
+        <div class="map-stat">
+          <div class="map-stat-number">$2,115</div>
+          <div class="map-stat-label">In Coffees</div>
+        </div>
+      </div>
+
+      <!-- 100 Countries Goal -->
+      <div class="goal-container">
+        <div class="goal-label">
+          <span><strong>27</strong> of 100 countries</span>
+          <span>27%</span>
+        </div>
+        <div class="goal-bar-track">
+          <div class="goal-bar-fill" style="width: 27%;"></div>
+        </div>
+      </div>
+
+      <!-- Map placeholder for Lovable implementation -->
+      <div class="map-placeholder">
+        <div class="map-placeholder-icon">&#127758;</div>
+        <h4>Interactive World Map</h4>
+        <p>Countries illuminate in real time as readers join the experiment. Hover to see reader count per country.</p>
+        <div class="specs">
+          <span>Choropleth</span>
+          <span>Country-level only</span>
+          <span>All-time data</span>
+          <span>No PII</span>
+        </div>
+      </div>
+
+      <p class="map-footnote">Country-level only. No personal data tracked. All-time purchases.</p>
+    </div>
+
+    <!-- Morning Coffee Relay -->
+    <div class="relay-container">
+      <div class="relay-header">
+        <div class="relay-header-left">
+          <h4>The Morning Coffee Relay</h4>
+        </div>
+        <div class="relay-header-left" style="gap:6px;">
+          <div class="relay-live-dot"></div>
+          <span class="relay-live-label">Live</span>
+        </div>
+      </div>
+      <div class="relay-feed" id="relay-feed">
+        <div class="relay-item">
+          <div class="relay-flag">&#127471;&#127477;</div>
+          <div class="relay-message">Someone in <strong>Japan</strong> joined the experiment &#9749;</div>
+          <div class="relay-time">2 min ago</div>
+        </div>
+        <div class="relay-item">
+          <div class="relay-flag">&#127468;&#127463;</div>
+          <div class="relay-message">Someone in <strong>United Kingdom</strong> gifted a book &#9749;</div>
+          <div class="relay-time">8 min ago</div>
+        </div>
+        <div class="relay-item">
+          <div class="relay-flag">&#127463;&#127479;</div>
+          <div class="relay-message">Someone in <strong>Brazil</strong> joined the experiment &#9749;</div>
+          <div class="relay-time">14 min ago</div>
+        </div>
+        <div class="relay-item">
+          <div class="relay-flag">&#127464;&#127462;</div>
+          <div class="relay-message">Someone in <strong>Canada</strong> got the complete experiment &#9749;&#9749;&#9749;</div>
+          <div class="relay-time">23 min ago</div>
+        </div>
+        <div class="relay-item">
+          <div class="relay-flag">&#127470;&#127475;</div>
+          <div class="relay-message">Someone in <strong>India</strong> joined the experiment &#9749;</div>
+          <div class="relay-time">31 min ago</div>
+        </div>
+        <div class="relay-item">
+          <div class="relay-flag">&#127480;&#127466;</div>
+          <div class="relay-message">Someone in <strong>Sweden</strong> gifted the collection &#9749;&#9749;&#9749;</div>
+          <div class="relay-time">47 min ago</div>
+        </div>
+        <div class="relay-item">
+          <div class="relay-flag">&#127468;&#127469;</div>
+          <div class="relay-message">Someone in <strong>Ghana</strong> joined the experiment &#9749;</div>
+          <div class="relay-time">1 hr ago</div>
+        </div>
+        <div class="relay-item">
+          <div class="relay-flag">&#127462;&#127482;</div>
+          <div class="relay-message">Someone in <strong>Australia</strong> joined the experiment &#9749;</div>
+          <div class="relay-time">1 hr ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ WHISPER WALL ════════ -->
+<section class="whisper-section">
+  <div class="inner">
+    <div class="section-label">The Whisper Wall</div>
+    <h2 class="section-title">What Readers Wrote After Reading</h2>
+    <p class="whisper-intro">
+      Every reader is invited to complete one sentence. A solo reading experience, turned into a global collection of human wisdom.
+    </p>
+
+    <div class="whisper-wall">
+      <div class="whisper-card">
+        <p class="whisper-text">After reading, I gave myself permission to not understand everything on the first read. That was the whole point.</p>
+        <div class="whisper-meta">
+          <span class="whisper-origin"><span class="flag">&#127471;&#127477;</span> Japan</span>
+          <span class="whisper-book-tag">Meet AI</span>
+        </div>
+      </div>
+
+      <div class="whisper-card">
+        <p class="whisper-text">After reading, I gave myself permission to say "I don't know" in the boardroom. It's never dumb. It's the question everyone else is afraid to ask.</p>
+        <div class="whisper-meta">
+          <span class="whisper-origin"><span class="flag">&#127464;&#127462;</span> Canada</span>
+          <span class="whisper-book-tag">Own AI</span>
+        </div>
+      </div>
+
+      <div class="whisper-card">
+        <p class="whisper-text">After reading, I gave myself permission to explain a neural network to my daughter. That feels like a superpower.</p>
+        <div class="whisper-meta">
+          <span class="whisper-origin"><span class="flag">&#127482;&#127480;</span> United States</span>
+          <span class="whisper-book-tag">Meet AI</span>
+        </div>
+      </div>
+
+      <div class="whisper-card">
+        <p class="whisper-text">After reading, I gave myself permission to stop being afraid of AI and start being curious about it. That shift happened in one sitting.</p>
+        <div class="whisper-meta">
+          <span class="whisper-origin"><span class="flag">&#127470;&#127475;</span> India</span>
+          <span class="whisper-book-tag">Meet AI</span>
+        </div>
+      </div>
+
+      <div class="whisper-card">
+        <p class="whisper-text">After reading, I gave myself permission to see energy and AI as the same conversation. I didn't see that until page 12.</p>
+        <div class="whisper-meta">
+          <span class="whisper-origin"><span class="flag">&#127463;&#127479;</span> Brazil</span>
+          <span class="whisper-book-tag">Own AI</span>
+        </div>
+      </div>
+
+      <div class="whisper-card">
+        <p class="whisper-text">After reading, I gave myself permission to think about what happens after what happens. Second-order effects. Now I can't stop.</p>
+        <div class="whisper-meta">
+          <span class="whisper-origin"><span class="flag">&#127474;&#127485;</span> Mexico</span>
+          <span class="whisper-book-tag">Leverage AI</span>
+        </div>
+      </div>
+
+      <div class="whisper-card">
+        <p class="whisper-text">After reading, I gave myself permission to lead with questions, not answers. The best risk managers I know do exactly this.</p>
+        <div class="whisper-meta">
+          <span class="whisper-origin"><span class="flag">&#127468;&#127469;</span> Ghana</span>
+          <span class="whisper-book-tag">Leverage AI</span>
+        </div>
+      </div>
+
+      <div class="whisper-card">
+        <p class="whisper-text">After reading, I gave myself permission to build slowly. The coffee is patient. So is the learning.</p>
+        <div class="whisper-meta">
+          <span class="whisper-origin"><span class="flag">&#127472;&#127466;</span> Kenya</span>
+          <span class="whisper-book-tag">Meet AI</span>
+        </div>
+      </div>
+
+      <div class="whisper-card">
+        <p class="whisper-text">After reading, I gave myself permission to see transparency not as weakness, but as the whole argument.</p>
+        <div class="whisper-meta">
+          <span class="whisper-origin"><span class="flag">&#127465;&#127466;</span> Germany</span>
+          <span class="whisper-book-tag">Leverage AI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="whisper-cta">
+      <p class="whisper-submit-hint">"After reading, I gave myself permission to ___."</p>
+      <a href="#" class="btn-whisper">Leave Your Whisper</a>
+      <p class="whisper-count"><span>847</span> whispers from <span>27</span> countries</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CONFIDENCE SHIFT ════════ -->
+<section class="confidence-section">
+  <div class="inner">
+    <div class="section-label">The Confidence Shift</div>
+    <h2 class="section-title">How Did the Experiment Change You?</h2>
+    <p class="confidence-intro">A two-question pulse check. No accounts. No tracking. Just a before and an after.</p>
+
+    <div class="confidence-poll">
+      <div class="confidence-column">
+        <div class="confidence-label">Before this book, I felt...</div>
+        <div class="confidence-options">
+          <div class="confidence-btn" onclick="selectConfidence(this,'before')">
+            <span class="confidence-btn-text">Anxious</span>
+            <span class="confidence-btn-pct">34%</span>
+            <div class="confidence-bar" style="width:34%;"></div>
+          </div>
+          <div class="confidence-btn" onclick="selectConfidence(this,'before')">
+            <span class="confidence-btn-text">Overwhelmed</span>
+            <span class="confidence-btn-pct">28%</span>
+            <div class="confidence-bar" style="width:28%;"></div>
+          </div>
+          <div class="confidence-btn" onclick="selectConfidence(this,'before')">
+            <span class="confidence-btn-text">Skeptical</span>
+            <span class="confidence-btn-pct">15%</span>
+            <div class="confidence-bar" style="width:15%;"></div>
+          </div>
+          <div class="confidence-btn" onclick="selectConfidence(this,'before')">
+            <span class="confidence-btn-text">Curious</span>
+            <span class="confidence-btn-pct">23%</span>
+            <div class="confidence-bar" style="width:23%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="confidence-divider">
+        <span class="confidence-arrow">&#8594;</span>
+      </div>
+
+      <div class="confidence-column">
+        <div class="confidence-label">After this book, I feel...</div>
+        <div class="confidence-options">
+          <div class="confidence-btn" onclick="selectConfidence(this,'after')">
+            <span class="confidence-btn-text">Informed</span>
+            <span class="confidence-btn-pct">22%</span>
+            <div class="confidence-bar" style="width:22%;"></div>
+          </div>
+          <div class="confidence-btn" onclick="selectConfidence(this,'after')">
+            <span class="confidence-btn-text">Capable</span>
+            <span class="confidence-btn-pct">27%</span>
+            <div class="confidence-bar" style="width:27%;"></div>
+          </div>
+          <div class="confidence-btn" onclick="selectConfidence(this,'after')">
+            <span class="confidence-btn-text">Empowered</span>
+            <span class="confidence-btn-pct">31%</span>
+            <div class="confidence-bar" style="width:31%;"></div>
+          </div>
+          <div class="confidence-btn" onclick="selectConfidence(this,'after')">
+            <span class="confidence-btn-text">Inspired</span>
+            <span class="confidence-btn-pct">20%</span>
+            <div class="confidence-bar" style="width:20%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="confidence-total"><span>312</span> readers have shared their shift</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════ APPRENTICE CHANGELOG ════════ -->
+<section class="changelog-section">
+  <div class="inner">
+    <div class="section-label">The Apprentice Changelog</div>
+    <h2 class="section-title">Same Human. Different Apprentice. Watch What Changes.</h2>
+    <p class="changelog-intro">
+      Each edition of these books is written with the same human intent but a different AI collaborator. The changelog tracks what shifted — not just technically, but in how ideas were expressed, structured, and understood.
+    </p>
+
+    <div class="changelog-timeline">
+      <div class="changelog-entry">
+        <div class="changelog-year">2026 &middot; Current Edition</div>
+        <h4>v2026 — Assisted by Claude 4.6</h4>
+        <p>The foundation. The human wrote and applied Claude 4.6, Nanno Banana, Lovable.</p>
+      </div>
+
+      <div class="changelog-entry changelog-future">
+        <div class="changelog-year">2027 &middot; Planned</div>
+        <h4>v2027 — Apprentice TBD</h4>
+        <p>Same three topics. Same human intent. New model. Will a more capable apprentice change the metaphors? Simplify the explanations? Find connections the 2026 edition missed? The only way to know is to run the experiment again.</p>
+      </div>
+
+      <div class="changelog-entry changelog-future">
+        <div class="changelog-year">2028+</div>
+        <h4>The Longitudinal Record</h4>
+        <p>Over time, the collection of editions becomes a living record of AI evolution — told through the lens of one human's unchanged intent. What stays the same matters as much as what changes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════ RULES ════════ -->
+<section>
+  <div class="section-label">The Rules</div>
+  <h2 class="section-title">How This Experiment Works</h2>
+
+  <div class="rules-grid">
+    <div class="rule-card">
+      <span class="rule-icon">&#9749;</span>
+      <h4>Coffee-Priced</h4>
+      <p>Every book costs what your morning brew costs. Knowledge should be accessible.</p>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon" style="color:#00B0FF;">&#10084;</span>
+      <h4>100% Donated</h4>
+      <p>All revenue donated after 12 months to an organization advancing literacy.</p>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">&#128196;</span>
+      <h4>Versioned + Open</h4>
+      <p>Every edition stamped with year and model. You get the markdown source files. Watch the experiment evolve.</p>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">&#128274;</span>
+      <h4>Privacy First</h4>
+      <p>Country-level map data only. No tracking. No accounts. No personal data.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════ AUTHOR ════════ -->
+<section class="author-section">
+  <div class="inner">
+    <img src="T Ngo - Resized (small).png" alt="T Ngo" class="author-photo">
+    <h2 class="author-greeting">Hi — I'm T. Ngo.</h2>
+    <p class="author-role"><strong>I'm the human. AI is my apprentice.</strong></p>
+    <p class="author-role">In a world of automated noise, human intent remains our most valuable asset.</p>
+    <p class="author-role" style="margin-top:16px;">The best way to predict the future is to co-author it. Let's do that, shall we?</p>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="footer">
+  <div class="footer-brand">T Ngo &#9749;</div>
+  <p class="footer-sign-off">Stay curious. Be safe. Be well.</p>
+  <div class="footer-links">An AI Literary Experiment &middot; 2026</div>
+</footer>
+
+<!-- ════════ STICKY BUY BAR ════════ -->
+<div class="sticky-bar" id="sticky-bar">
+  <div class="sticky-bar-books">
+    <a href="#books-section">Meet AI</a>
+    <span class="sticky-bar-sep">|</span>
+    <a href="#books-section">Own AI</a>
+    <span class="sticky-bar-sep">|</span>
+    <a href="#books-section">Leverage AI</a>
+  </div>
+  <a href="#books-section" class="btn-buy">Get All Three — $10</a>
+</div>
+
+<script>
+// ── Confidence Shift Poll ──
+function selectConfidence(el, group) {
+  const parent = el.closest('.confidence-options');
+  parent.querySelectorAll('.confidence-btn').forEach(btn => btn.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── Sticky Buy Bar: show after scrolling past book cards ──
+const booksSection = document.getElementById('books-section');
+const stickyBar = document.getElementById('sticky-bar');
+let stickyVisible = false;
+
+window.addEventListener('scroll', function() {
+  if (!booksSection || !stickyBar) return;
+  const rect = booksSection.getBoundingClientRect();
+  const shouldShow = rect.bottom < 0;
+  if (shouldShow !== stickyVisible) {
+    stickyVisible = shouldShow;
+    stickyBar.classList.toggle('visible', shouldShow);
+  }
+}, { passive: true });
+
+// ── Header Pulse: rotating messages ──
+const pulseMessages = [
+  'Someone in Japan joined the experiment',
+  'Someone in Brazil joined the experiment',
+  'Someone in United Kingdom gifted a book',
+  'Someone in Ghana joined the experiment',
+  'Someone in Canada got the complete experiment',
+  'Someone in India joined the experiment',
+  'Someone in Australia joined the experiment',
+  'Someone in Germany gifted a book',
+  'Someone in Kenya joined the experiment',
+  'Someone in Mexico joined the experiment',
+  'Someone in South Korea joined the experiment',
+  'Someone in France joined the experiment',
+  'Someone in Nigeria gifted a book',
+];
+
+let pulseIndex = 0;
+const pulseEl = document.getElementById('header-pulse-text');
+const pulseContainer = document.getElementById('header-pulse');
+
+function rotatePulse() {
+  pulseContainer.style.opacity = '0';
+  setTimeout(() => {
+    pulseIndex = (pulseIndex + 1) % pulseMessages.length;
+    pulseEl.textContent = pulseMessages[pulseIndex];
+    pulseContainer.style.opacity = '1';
+  }, 400);
+}
+
+pulseContainer.style.transition = 'opacity 0.4s ease';
+setInterval(rotatePulse, 5000);
+
+// ── Morning Coffee Relay: simulated live feed ──
+const relayData = [
+  { flag: '&#127472;&#127479;', country: 'South Korea', action: 'joined the experiment' },
+  { flag: '&#127467;&#127479;', country: 'France', action: 'gifted a book' },
+  { flag: '&#127475;&#127468;', country: 'Nigeria', action: 'joined the experiment' },
+  { flag: '&#127462;&#127479;', country: 'Argentina', action: 'got the complete experiment' },
+  { flag: '&#127484;&#127475;', country: 'Vietnam', action: 'joined the experiment' },
+  { flag: '&#127474;&#127462;', country: 'Morocco', action: 'joined the experiment' },
+  { flag: '&#127470;&#127473;', country: 'Israel', action: 'gifted the collection' },
+  { flag: '&#127477;&#127469;', country: 'Philippines', action: 'joined the experiment' },
+  { flag: '&#127464;&#127473;', country: 'Chile', action: 'joined the experiment' },
+  { flag: '&#127477;&#127473;', country: 'Poland', action: 'gifted a book' },
+];
+
+let relayIndex = 0;
+function addRelayItem() {
+  const feed = document.getElementById('relay-feed');
+  if (!feed) return;
+  const d = relayData[relayIndex % relayData.length];
+  relayIndex++;
+
+  const cups = d.action.includes('complete') || d.action.includes('collection') ? '&#9749;&#9749;&#9749;' : '&#9749;';
+
+  const item = document.createElement('div');
+  item.className = 'relay-item';
+  item.innerHTML =
+    '<div class="relay-flag">' + d.flag + '</div>' +
+    '<div class="relay-message">Someone in <strong>' + d.country + '</strong> ' + d.action + ' ' + cups + '</div>' +
+    '<div class="relay-time">Just now</div>';
+
+  feed.insertBefore(item, feed.firstChild);
+  if (feed.children.length > 12) feed.removeChild(feed.lastChild);
+}
+
+setInterval(addRelayItem, 8000 + Math.random() * 7000);
+</script>
+
+</body>
+</html>
